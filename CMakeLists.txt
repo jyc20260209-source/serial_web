@@ -1,12 +1,19 @@
-cmake_minimum_required(VERSION 3.10)
+cmake_minimum_required(VERSION 3.5)
+project(serial_web C)
 
-project(serial_web)
+set(CMAKE_C_STANDARD 99)
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -O2 -pthread")
 
-set(CMAKE_CXX_STANDARD 14)
-set(CMAKE_CXX_STANDARD_REQUIRED True)
+add_executable(serial_web
+    src/main.c
+    src/http_server.c
+    src/serial_posix.c
+    src/log_buffer.c
+    src/base64.c
+    src/json_simple.c
+)
 
-add_executable(serial_web main.cpp) # Replace main.cpp with your source files
+target_include_directories(serial_web PRIVATE src)
 
-# Link with pthread
-find_package(Threads REQUIRED)
-target_link_libraries(serial_web PRIVATE Threads::Threads)
+install(TARGETS serial_web DESTINATION bin)
+install(DIRECTORY web/ DESTINATION share/serial_web)
